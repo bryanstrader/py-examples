@@ -1,8 +1,10 @@
 import turtle
+import time
+
 
 #view setup
 wn = turtle.Screen()
-wn.title("Strader")
+wn.title("Pong")
 wn.bgcolor("black")
 wn.setup(width=800, height=600)
 wn.tracer(0)
@@ -33,8 +35,8 @@ ball.penup()
 ball.goto(0, 0)
 
 # ball movement
-ball.dx = .25
-ball.dy = .25
+ball.dx = .20
+ball.dy = .20
 
 
 def paddle_up(paddle):
@@ -64,6 +66,10 @@ def paddle_down_a():
 def paddle_down_b():
     paddle_down(paddle_b)
 
+
+def update_score():
+    score = "Score: A - " + str(score_a) + " B - " + str(score_b)
+    wn.title("Pong (" + score + ")")
 
 
 # Key bindings
@@ -97,13 +103,24 @@ while in_progress:
         ball.dy *= -1
 
     if ball.xcor() > 390:
-        #in_progress = False
         score_a += 1
+        update_score()
         ball.goto(0, 0)
+        time.sleep(1)
         ball.dx *= -1
 
     if ball.xcor() < -390:
-        #in_progress = False
         score_b += 1
+        update_score()
         ball.goto(0, 0)
-        ball.dx *= -1    
+        time.sleep(1)
+        ball.dx *= -1
+
+    # detect paddle collision
+    if (ball.xcor() > 340 and ball.xcor() < 350) and (ball.ycor() < paddle_b.ycor() + 40 and ball.ycor() > paddle_b.ycor() - 50):
+        ball.setx(340)
+        ball.dx *= -1
+
+    if (ball.xcor() < -340 and ball.xcor() > -350) and (ball.ycor() < paddle_a.ycor() + 40 and ball.ycor() > paddle_a.ycor() - 50):
+        ball.setx(-340)
+        ball.dx *= -1        
